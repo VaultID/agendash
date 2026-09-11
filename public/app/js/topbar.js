@@ -1,5 +1,5 @@
 const topbar = Vue.component("topbar", {
-  props: ["name", "state", "search", "property"],
+  props: ["name", "state", "search", "property", "valueType"],
   data: () => ({
     // search: '',
     // property: 'data.id',
@@ -8,7 +8,13 @@ const topbar = Vue.component("topbar", {
     skip: 0,
     refresh: 60,
     // state: '',
-    object: false,
+    valueTypes: [
+      { text: "Text", value: "text" },
+      { text: "Number", value: "number" },
+      { text: "Boolean", value: "boolean" },
+      { text: "ObjectId", value: "objectId" },
+      { text: "Regex", value: "regex" },
+    ],
     stateobject: [
       { text: "All", value: "", class: "" },
       { text: "Scheduled", value: "scheduled", class: "" },
@@ -30,7 +36,7 @@ const topbar = Vue.component("topbar", {
         this.skip,
         this.refresh,
         this.state,
-        this.object
+        this.valueType
       );
     },
   },
@@ -55,10 +61,14 @@ const topbar = Vue.component("topbar", {
               <span class="input-group-text"> Value </span>
             </div>
             <input class="form-control" v-model="search" placeholder="green"/>
-            <div class="form-check mx-2 pt-2">
-                <input type="checkbox" v-model="object" class="form-check-input" id="isObjectId">
-                <label class="form-check-label" for="isObjectId"> Is ObjectId?</label>
+          </div>
+          <div class="input-group mt-2 mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text"> Value Type </span>
             </div>
+            <select v-model="valueType" class="form-control" id="selectValueTypeInput">
+              <option v-for="option in valueTypes" v-bind:value="option.value">{{option.text}}</option>
+            </select>
           </div>
       </div>
       <div class="col-xs-12 col-md-6">
@@ -86,8 +96,8 @@ const topbar = Vue.component("topbar", {
     </div>
     <div class="row mb-3">
       <div class="col-xs-12 col-md-3 ml-auto text-right">
-        <button type=submit @click="$emit('search-form', name, search, property, limit, skip, refresh, state, object)" class="d-none d-md-inline-block btn btn-success"> Apply </button>
-        <button type=submit @click="$emit('search-form', name, search, property, limit, skip, refresh, state, object)" class="d-none d-inline-block d-md-none btn btn-block btn-success"> Apply </button>
+        <button type=submit @click="$emit('search-form', name, search, property, limit, skip, refresh, state, valueType)" class="d-none d-md-inline-block btn btn-success"> Apply </button>
+        <button type=submit @click="$emit('search-form', name, search, property, limit, skip, refresh, state, valueType)" class="d-none d-inline-block d-md-none btn btn-block btn-success"> Apply </button>
       </div>
     </div>
   </form>
