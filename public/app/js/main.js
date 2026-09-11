@@ -18,7 +18,7 @@ const app = Vue.component("app", {
     createc: false,
     property: "",
     search: "",
-    object: "",
+    valueType: "text",
     newLimit: null,
     skip: 0,
     name: "",
@@ -65,7 +65,7 @@ const app = Vue.component("app", {
       this.jobData = data;
       this.showNewJob = true;
     },
-    searchForm(name, search, property, limit, skip, refresh, state, object) {
+    searchForm(name, search, property, limit, skip, refresh, state, valueType) {
       (this.pagesize = limit ? limit : this.pagesize),
         (this.name = name),
         (this.search = search),
@@ -73,7 +73,7 @@ const app = Vue.component("app", {
         (this.skip = skip),
         (this.refresh = refresh),
         (this.state = state),
-        (this.object = object ? object : this.object),
+        (this.valueType = valueType || this.valueType),
         this.fetchData(
           this.name,
           this.search,
@@ -82,7 +82,7 @@ const app = Vue.component("app", {
           this.skip,
           this.refresh,
           this.state,
-          this.object
+          this.valueType
         );
     },
     refreshData() {
@@ -94,7 +94,7 @@ const app = Vue.component("app", {
         this.skip,
         this.refresh,
         this.state,
-        this.object
+        this.valueType
       );
     },
     pagechange(action) {
@@ -113,7 +113,7 @@ const app = Vue.component("app", {
         this.skip,
         this.refresh,
         this.state,
-        this.object
+        this.valueType
       );
     },
     fetchData(
@@ -124,14 +124,14 @@ const app = Vue.component("app", {
       skip = 0,
       refresh = 60,
       state = "",
-      object
+      valueType = "text"
     ) {
       this.loading = true;
       this.pagesize = this.pagesize === 0 ? parseInt(limit) : this.pagesize;
       this.refresh = parseFloat(refresh);
-      const url = `api?limit=${limit}&job=${name}&skip=${skip}&property=${property}${
-        object ? "&isObjectId=true" : ""
-      }${state ? `&state=${state}` : ""}&q=${search}`;
+      const url = `api?limit=${limit}&job=${name}&skip=${skip}&property=${property}&valueType=${valueType}${
+        state ? `&state=${state}` : ""
+      }&q=${search}`;
       return axios
         .get(url)
         .then((result) => result.data)
@@ -140,7 +140,7 @@ const app = Vue.component("app", {
             this.jobs = data.jobs;
             this.search = search;
             this.property = property;
-            this.object = object;
+            this.valueType = valueType;
             this.overview = data.overview;
             this.loading = false;
           },
@@ -236,6 +236,7 @@ const app = Vue.component("app", {
               :state='state'
               :search='search'
               :property='property'
+              :value-type='valueType'
               >
               </topbar>
             </div>
